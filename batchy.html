@@ -1,0 +1,407 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Batchy — .BAT Guide & Playground</title>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
+<style>
+  :root{
+    --bg:#0f1720;
+    --card:#0b1220;
+    --accent:#e11d48; /* red */
+    --accent-light:#ff6b8f; /* light red */
+    --muted:#98a0ad;
+    --glass: rgba(255,255,255,0.03);
+    --radius:12px;
+  }
+  html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071020 0%,var(--bg) 100%);color:#e6eef6}
+  .wrap{max-width:1100px;margin:28px auto;padding:20px}
+  header{display:flex;align-items:center;gap:18px;padding:12px 0}
+  .logo{
+    display:flex;align-items:center;gap:12px;
+  }
+  .logo .mark{
+    width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-light));
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-family:monospace;box-shadow:0 6px 26px rgba(225,29,72,0.18)
+  }
+  .logo h1{font-size:20px;margin:0}
+  nav.topnav{margin-left:auto}
+  /* tabs row */
+  .tabs{display:flex;gap:10px;align-items:center}
+  .tab{
+    --w:96px;
+    display:inline-flex;align-items:center;justify-content:center;
+    width:var(--w); height:44px; border-radius:10px;
+    background:transparent;border:1px solid rgba(255,255,255,0.04);
+    color:var(--muted); cursor:pointer; user-select:none; transition:all .22s cubic-bezier(.2,.9,.2,1);
+    font-weight:600;padding:0 14px;
+    outline:none;
+  }
+  .tab:focus{box-shadow:0 6px 20px rgba(0,0,0,0.6),0 0 0 4px rgba(225,29,72,0.08)}
+  .tab[aria-selected="true"]{ color:#fff; border-color:rgba(255,255,255,0.06); background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)) }
+  /* hover effect: smoothly resize & change color from red to light red */
+  .tab:hover{
+    transform:scale(1.08);
+    background:linear-gradient(180deg, rgba(225,29,72,0.08), rgba(255,107,143,0.04));
+    color:#fff;
+    border-color: rgba(225,29,72,0.18);
+  }
+  /* extra visual hint for hover using pseudo element */
+  .tab::after{ content:""; display:block; height:4px; width:0; background:var(--accent-light); border-radius:4px; margin-left:auto; margin-right:auto; transition:width .22s ease }
+  .tab:hover::after{ width:52%; }
+
+  main{margin-top:18px; display:grid; grid-template-columns: 1fr 360px; gap:18px}
+  .card{background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:0 8px 30px rgba(2,6,23,0.6); border:1px solid rgba(255,255,255,0.02)}
+  .hero{padding:28px; display:flex;flex-direction:column;gap:12px}
+  .hero h2{margin:0;font-size:20px}
+  .hero p{margin:0;color:var(--muted)}
+
+  /* content panes */
+  .pane{display:none}
+  .pane.active{display:block}
+  pre {background:#07101a;padding:12px;border-radius:8px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+  code {white-space:pre-wrap}
+  .actions{display:flex;gap:8px;margin-top:12px}
+  .btn{background:linear-gradient(180deg,var(--accent),var(--accent-light));color:#fff;padding:8px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+  .btn.secondary{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
+  .small{font-size:13px;color:var(--muted)}
+  .section{margin-bottom:18px}
+
+  /* right column: quick links and examples */
+  .right .card-title{display:flex;align-items:center;justify-content:space-between}
+  .example-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .example-item{background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));padding:10px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,0.02)}
+  .footer{margin-top:18px;color:var(--muted);font-size:13px}
+
+  /* responsive */
+  @media (max-width:980px){
+    main{grid-template-columns:1fr; padding-bottom:80px}
+    .tabs{flex-wrap:wrap}
+  }
+</style>
+
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="mark">GMD</div>
+        <div>
+          <h1>Batchy — .BAT Guide & Playground</h1>
+          <div class="small">Practical docs, examples & copyable snippets for Windows batch scripting</div>
+        </div>
+      </div>
+
+```
+  <nav class="topnav" aria-label="Primary">
+    <div class="tabs" role="tablist" aria-orientation="horizontal">
+      <button class="tab" role="tab" aria-selected="true" data-target="home" id="tab-home">Home</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="tutorials" id="tab-tutorials">Tutorials</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="docs" id="tab-docs">.BAT Docs</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="examples" id="tab-examples">Examples</button>
+      <button class="tab" role="tab" aria-selected="false" data-target="about" id="tab-about">About</button>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="card hero pane active" id="home">
+    <h2>Welcome to Batchy</h2>
+    <p>Your interactive guide to writing Windows .BAT scripts. Use the tabs above to browse tutorials, reference docs, and working examples you can copy or download.</p>
+
+    <div class="section">
+      <h3 class="small">Quick start</h3>
+      <ol class="small">
+        <li>Create a new text file and save it as <code>script.bat</code>.</li>
+        <li>Paste a code sample and double-click to run (or run in a CMD window).</li>
+        <li>Use the "Download" button in Examples to get a ready file.</li>
+      </ol>
+    </div>
+
+    <div class="section">
+      <h3 class="small">Featured snippet</h3>
+      <pre><code id="featured-code">@echo off
+```
+
+echo Hello — this is a safe batch demo.
+echo Current folder: %cd%
+pause</code></pre> <div class="actions"> <button class="btn" onclick="copyCode('#featured-code')">Copy snippet</button> <button class="btn secondary" onclick="downloadBlob('hello-demo.bat', document.querySelector('#featured-code').innerText)">Download .bat</button> </div> </div>
+
+```
+    <div class="section">
+      <h3 class="small">Search docs</h3>
+      <input id="search" placeholder="Search .bat docs or examples..." style="width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff" oninput="filterDocs(this.value)">
+      <div id="search-result" class="small" style="margin-top:8px;color:var(--muted)"></div>
+    </div>
+  </section>
+
+  <aside class="card right">
+    <div class="card-title">
+      <div style="font-weight:700">Examples</div>
+      <div class="small">Quick downloads</div>
+    </div>
+
+    <div class="example-list">
+      <div class="example-item">
+        <div>
+          <div style="font-weight:700">Hello demo</div>
+          <div class="small">Prints a hello & pause</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn" onclick="downloadBlob('hello-demo.bat', '@echo off\n echo Hello world\n pause')">Download</button>
+        </div>
+      </div>
+
+      <div class="example-item">
+        <div>
+          <div style="font-weight:700">Make folder</div>
+          <div class="small">Create folder if missing</div>
+        </div>
+        <div>
+          <button class="btn" onclick="downloadBlob('mkfolder.bat','@echo off\nif not exist \"C:\\\\Temp\\\\MyFolder\" mkdir \"C:\\\\Temp\\\\MyFolder\"\necho done')">Download</button>
+        </div>
+      </div>
+
+      <div class="example-item">
+        <div>
+          <div style="font-weight:700">Safe IP gen</div>
+          <div class="small">Generates a private LAN IP</div>
+        </div>
+        <div>
+          <button class="btn" onclick="downloadBlob('ipgen.bat','@echo off\nset /a R=%random%\\nset /a c=%random% %% 256\\necho 192.168.%c%.%R%')">Download</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div style="margin-top:12px">Tip: Host this page on GitHub Pages or Netlify for a free, working domain (or add a custom domain through your registrar).</div>
+    </div>
+  </aside>
+
+  <!-- TUTORIALS PANE -->
+  <section class="card pane" id="tutorials" aria-hidden="true">
+    <h2>Tutorials</h2>
+    <div class="section">
+      <h3 class="small">Batch basics</h3>
+      <p class="small">Batch (.bat) files are plain text files executed by Windows CMD. Common commands: <code>echo</code>, <code>set</code>, <code>if</code>, <code>for</code>, <code>goto</code>, <code>call</code>.</p>
+    </div>
+
+    <div class="section">
+      <h3 class="small">Variables & input</h3>
+      <pre><code id="vars-code">@echo off
+```
+
+set /p name=Enter your name:
+echo Hello %name%
+pause</code></pre> <div class="actions"> <button class="btn" onclick="copyCode('#vars-code')">Copy</button> <button class="btn secondary" onclick="downloadBlob('vars-demo.bat', document.querySelector('#vars-code').innerText)">Download</button> </div> </div>
+
+```
+    <div class="section">
+      <h3 class="small">Control flow</h3>
+      <pre><code id="flow-code">@echo off
+```
+
+set /p c=Choose 1 or 2:
+if "%c%"=="1" goto one
+if "%c%"=="2" goto two
+goto end
+:one
+echo You chose 1
+goto end
+:two
+echo You chose 2
+:end
+pause</code></pre> <div class="actions"><button class="btn" onclick="copyCode('#flow-code')">Copy</button></div> </div>
+
+```
+  </section>
+
+  <!-- DOCS PANE -->
+  <section class="card pane" id="docs" aria-hidden="true">
+    <h2>.BAT Reference</h2>
+
+    <div class="section">
+      <h3 class="small">Echo</h3>
+      <p class="small"><code>echo</code> prints text. Use <code>@echo off</code> at top to quiet the command display.</p>
+    </div>
+
+    <div class="section">
+      <h3 class="small">Set & variables</h3>
+      <p class="small">Assign: <code>set name=value</code>. Read: <code>%name%</code>. Use delayed expansion for runtime changes (<code>!var!</code>).</p>
+    </div>
+
+    <div class="section">
+      <h3 class="small">If / For / Goto</h3>
+      <p class="small">Conditionals: <code>if</code>, loops: <code>for /f</code>, labels: <code>:label</code> and jump with <code>goto label</code>.</p>
+    </div>
+
+    <div class="section">
+      <h3 class="small">Tips</h3>
+      <ul class="small">
+        <li>Quote paths that contain spaces.</li>
+        <li>Test on a VM before running scripts that modify files or system settings.</li>
+        <li>Prefer PowerShell for advanced scripting and better safety/features.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- EXAMPLES PANE -->
+  <section class="card pane" id="examples" aria-hidden="true">
+    <h2>Examples</h2>
+
+    <div class="section">
+      <h3 class="small">Create backup of folder</h3>
+      <pre><code id="backup-code">@echo off
+```
+
+set src=C:\MyProject
+set dst=C:\Backup\MyProject_%date:~10,4%-%date:~4,2%-%date:~7,2%
+xcopy "%src%" "%dst%" /E /I /Y
+echo Backup created: %dst%
+pause</code></pre> <div class="actions"><button class="btn" onclick="copyCode('#backup-code')">Copy</button></div> </div>
+
+```
+    <div class="section">
+      <h3 class="small">Safe IP generator (private ranges)</h3>
+      <pre><code id="ipgen-code">@echo off
+```
+
+rem Generates a PRIVATE LAN IP for testing
+set /a R=%random%
+set /a choice=R %% 3
+if %choice%==0 (
+set /a b=%random% %% 256
+set /a c=%random% %% 256
+set /a d=%random% %% 256
+echo 10.%b%.%c%.%d%
+) else if %choice%==1 (
+set /a b=16 + (%random% %% 16)
+set /a c=%random% %% 256
+set /a d=%random% %% 256
+echo 172.%b%.%c%.%d%
+) else (
+set /a c=%random% %% 256
+set /a d=%random% %% 256
+echo 192.168.%c%.%d%
+)
+pause</code></pre> <div class="actions"><button class="btn" onclick="copyCode('#ipgen-code')">Copy</button></div> </div>
+
+```
+  </section>
+
+  <!-- ABOUT -->
+  <section class="card pane" id="about" aria-hidden="true">
+    <h2>About</h2>
+    <p class="small">Batchy is a learning resource for .BAT scripting with safe, tested examples. It is meant for education and small automation tasks. For advanced or system-level work, prefer PowerShell and follow security best practices.</p>
+    <div class="section">
+      <h3 class="small">Host & domain</h3>
+      <p class="small">To make this site live with a domain:
+        <ul>
+          <li>Host on GitHub Pages, Netlify or Vercel (free static hosting).</li>
+          <li>Buy a domain from any registrar (Namecheap, Google Domains, etc.) and point DNS (A/CNAME) to your host.</li>
+        </ul>
+      </p>
+    </div>
+  </section>
+
+</main>
+```
+
+  </div>
+
+<script>
+  // TAB NAVIGATION
+  (function(){
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const panes = Array.from(document.querySelectorAll('.pane'));
+    function activate(targetId, clickedTab){
+      panes.forEach(p=> {
+        if(p.id===targetId){ p.classList.add('active'); p.setAttribute('aria-hidden','false') }
+        else { p.classList.remove('active'); p.setAttribute('aria-hidden','true') }
+      });
+      tabs.forEach(t=>{
+        const sel = t.dataset.target===targetId;
+        t.setAttribute('aria-selected', sel ? 'true' : 'false');
+      });
+      // optional focus
+      if(clickedTab) clickedTab.focus();
+    }
+    // init click handlers
+    tabs.forEach(t=>{
+      t.addEventListener('click', ()=> activate(t.dataset.target, t));
+      t.addEventListener('keydown', (ev)=>{
+        let i = tabs.indexOf(t);
+        if(ev.key === 'ArrowRight'){ tabs[(i+1)%tabs.length].click(); ev.preventDefault(); }
+        if(ev.key === 'ArrowLeft'){ tabs[(i-1+tabs.length)%tabs.length].click(); ev.preventDefault(); }
+        if(ev.key === 'Home'){ tabs[0].click(); ev.preventDefault(); }
+        if(ev.key === 'End'){ tabs[tabs.length-1].click(); ev.preventDefault(); }
+      });
+    });
+
+    // set initial active by data attribute on markup
+    const initial = tabs.find(t=>t.getAttribute('aria-selected')==='true') || tabs[0];
+    activate(initial.dataset.target, initial);
+  })();
+
+  // Copy code helper
+  function copyCode(selector){
+    const node = document.querySelector(selector);
+    if(!node) return;
+    const text = node.innerText || node.textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      flashMsg('Copied snippet to clipboard');
+    }, ()=> flashMsg('Copy failed — select text and copy manually'));
+  }
+
+  // Download helper - create blob and use anchor
+  function downloadBlob(filename, text){
+    const blob = new Blob([text], {type:'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 2000);
+    flashMsg('Download started: ' + filename);
+  }
+
+  // tiny flash notification
+  function flashMsg(msg){
+    const d = document.createElement('div');
+    d.style.position='fixed'; d.style.right='18px'; d.style.bottom='18px';
+    d.style.background='linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.4))';
+    d.style.color='#fff'; d.style.padding='10px 14px'; d.style.borderRadius='10px';
+    d.style.boxShadow='0 8px 30px rgba(2,6,23,0.6)'; d.style.zIndex=9999; d.style.fontSize='13px';
+    d.textContent = msg;
+    document.body.appendChild(d);
+    setTimeout(()=> { d.style.transition='opacity .4s'; d.style.opacity='0'; setTimeout(()=>d.remove(),400) }, 2100);
+  }
+
+  // Small search over docs & examples
+  const docsText = Array.from(document.querySelectorAll('.card')).map(c=>c.innerText.toLowerCase()).join('\n');
+  function filterDocs(q){
+    const out = document.getElementById('search-result');
+    if(!q || q.trim().length<2){ out.textContent='Type 2+ chars to search the docs.'; return; }
+    q = q.toLowerCase();
+    // simple local search (title + content)
+    const matches = [];
+    document.querySelectorAll('section.card').forEach(sec=>{
+      if(sec.innerText.toLowerCase().includes(q)) matches.push(sec.querySelector('h2') ? sec.querySelector('h2').innerText : 'Section');
+    });
+    out.textContent = matches.length ? 'Matches: ' + [...new Set(matches)].join(', ') : 'No matches';
+  }
+
+  // make download example blobs nicer by converting CRLF where needed (optional)
+  // nothing else - friendly site.
+
+  // Accessibility: allow Enter on tabs to activate
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('keyup', (e) => { if(e.key==='Enter'){ t.click(); }});
+  });
+</script>
+
+</body>
+</html> 
